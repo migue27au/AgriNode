@@ -1,4 +1,4 @@
-export const getHome = (req, res) => {
+export const getHome = async (req, res) => {
   res.json({
     status: 200,
     error: '',

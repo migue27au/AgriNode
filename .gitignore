@@ -1,3 +1,7 @@
+# Ignorar el archivo .env dentro del directorio backend/
+backend/.env
+frontend/.env
+
 # Logs
 logs
 *.log

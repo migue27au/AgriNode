@@ -1,37 +1,50 @@
 version: '3.8'
 
 services:
-  db:
+  agrinode_postgres:
     image: postgres:15
+    container_name: agrinode_postgres
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: irrigation
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
 
-  backend:
-    build: ./backend
+  agrinode_backend:
+    build: .
+    container_name: agrinode_backend
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "3000:3000"
     depends_on:
-      - db
-    environment:
-      DB_HOST: db
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: irrigation
+      - agrinode_postgres
+    networks:
+      - app-network
 
-  nginx:
+  agrinode_nginx:
     image: nginx:stable-alpine
+    container_name: agrinode_nginx
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
     depends_on:
-      - backend
+      - agrinode_backend
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   pgdata:
+    driver: local
