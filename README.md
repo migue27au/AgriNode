@@ -15,6 +15,7 @@ AgriNode es una API REST desarrollada en Node.js para gestionar y monitorizar si
 ---
 
 ## 🧱 Estructura de carpetas
+
 backend/
    ├── controllers/
    ├── services/
@@ -25,6 +26,10 @@ backend/
    ├── index.js
    └── Dockerfile
 
+yaml
+Copiar
+Editar
+
 ---
 
 ## 🐳 Cómo iniciar con Docker
@@ -33,4 +38,36 @@ backend/
 2. Ejecuta:
    ```bash
    docker-compose up --build
-   ```
+El backend estará disponible en: http://localhost:3000
+
+📦 Endpoints básicos
+POST /api/login – Login simulado
+
+GET /api/home – Prueba de disponibilidad (Hello World)
+
+🧪 Inicializar la base de datos
+Desde la carpeta raíz:
+
+bash
+Copiar
+Editar
+node db/init_db.js
+Esto creará las tablas users y greenhouses si no existen.
+
+📌 TODO (Próximos pasos)
+Autenticación JWT
+
+Gestión de sensores y registros de datos
+
+Dashboard web (React)
+
+App móvil (Android)
+
+⚙️ Variables de entorno (.env)
+env
+Copiar
+Editar
+DB_HOST=db
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=irrigation
