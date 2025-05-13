@@ -16,14 +16,14 @@ AgriNode es una API REST desarrollada en Node.js para gestionar y monitorizar si
 
 ## 🧱 Estructura de carpetas
 backend/
-├── controllers/
-├── services/
-├── routes/
-├── models/
-├── middlewares/
-├── config/
-├── index.js
-└── Dockerfile
+   ├── controllers/
+   ├── services/
+   ├── routes/
+   ├── models/
+   ├── middlewares/
+   ├── config/
+   ├── index.js
+   └── Dockerfile
 
 ---
 
