@@ -1,2 +1,36 @@
-# AgriNode
-AgriNode es una plataforma modular para gestionar y monitorizar invernaderos inteligentes. Recoge datos en tiempo real como humedad, temperatura y actividad de riego, y los expone a través de una API REST escalable para su análisis y control remoto.
+# 🌿 AgriNode
+
+AgriNode es una API REST desarrollada en Node.js para gestionar y monitorizar sistemas de riego inteligente en múltiples invernaderos. Pensado para escalar desde prototipos IoT hasta aplicaciones completas en producción.
+
+---
+
+## 🚀 Tecnologías principales
+
+- Node.js + Express
+- PostgreSQL
+- Docker + Docker Compose
+- NGINX (solo producción)
+- API REST modular y escalable
+
+---
+
+## 🧱 Estructura de carpetas
+backend/
+├── controllers/
+├── services/
+├── routes/
+├── models/
+├── middlewares/
+├── config/
+├── index.js
+└── Dockerfile
+
+---
+
+## 🐳 Cómo iniciar con Docker
+
+1. Clona el repositorio
+2. Ejecuta:
+   ```bash
+   docker-compose up --build
+   ```
