@@ -18,23 +18,24 @@ class Data {
     };
   }
 
-  static async createData(greenhouseId, jsonData) {
-    const result = await db.query(
-      'INSERT INTO datas (greenhouse_id, json_data, timestamp) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, greenhouse_id, timestamp, json_data',
-      [greenhouseId, JSON.stringify(jsonData)]
-    );
-    
-    return new Data(...Object.values(result.rows[0]));
-  }
+}
 
-  static async getDataByGreenhouseId(greenhouseId) {
-    const result = await db.query(
-      'SELECT * FROM datas WHERE greenhouse_id = $1 ORDER BY timestamp DESC LIMIT 10',
-      [greenhouseId]
-    );
-    
-    return result.rows.map(row => new Data(...Object.values(row)));
-  }
+export const createData = async (greenhouseId, jsonData) => {
+  const result = await db.query(
+    'INSERT INTO datas (greenhouse, json_data, timestamp) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, greenhouse, timestamp, json_data',
+    [greenhouseId, JSON.stringify(jsonData)]
+  );
+  
+  return new Data(...Object.values(result.rows[0]));
+}
+
+export const getDataByGreenhouseId = async (greenhouseId) => {
+  const result = await db.query(
+    'SELECT * FROM datas WHERE greenhouse = $1 ORDER BY timestamp DESC LIMIT 10',
+    [greenhouseId]
+  );
+  
+  return result.rows.map(row => new Data(...Object.values(row)));
 }
 
 export default Data;

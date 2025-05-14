@@ -21,12 +21,6 @@ class User {
       role: this.role
     };
   }
-
-  // Método para comparar una contraseña con la almacenada en la base de datos
-  async comparePassword(candidatePassword) {
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    return isMatch;  // Devuelve true o false
-  }
 }
 
 // Método para actualizar la contraseña del usuario
@@ -43,15 +37,6 @@ export const updatePassword = async (userId, newPassword) => {
     return result.rows[0];  // Devuelve el usuario con la nueva contraseña
   }
 
-  // Método para actualizar el rol de un usuario
-export const updateRole = async (userId, newRole) => {
-    const result = await db.query(
-      'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, username, password, last_session, role',
-      [newRole, userId]
-    );
-
-    return result.rows[0];  // Devuelve el usuario con el nuevo rol
-  }
 
 export const checkCredentials = async (username, password) => {
   const user = await getUserByUsername(username);
@@ -129,5 +114,55 @@ export const createUser = async (username, password, role = 'user') => {
     userData.role  // Añadir el rol del usuario
   );
 };
+
+
+export const updateLastSession = async (userId) => {
+  const result = await db.query(
+    'UPDATE users SET last_session = CURRENT_TIMESTAMP WHERE id = $1 RETURNING id, username, last_session, role',
+    [userId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;  // Si no se encuentra el usuario, devuelve null
+  }
+
+  const userData = result.rows[0];
+  return new User(
+    userData.id, 
+    userData.username, 
+    userData.password, 
+    userData.lastSession,
+    userData.role  // Añadir el rol del usuario
+  );
+};
+
+
+// Obtener todos los usuarios
+export const getAllUsers = async () => {
+  const result = await db.query('SELECT * FROM users');
+  return result.rows.map(user => ({
+    id: user.id,
+    username: user.username,
+    lastSession: user.last_session,
+    role: user.role
+  }));
+};
+
+// Actualizar el rol de un usuario
+export const updateRole = async (userId, newRole) => {
+  const result = await db.query(
+    'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, username, last_session, role',
+    [newRole, userId]
+  );
+
+  return result.rows[0];  // Devuelve el usuario con el nuevo rol
+};
+
+// Eliminar un usuario por ID
+export const deleteUserById = async (userId) => {
+  const result = await db.query('DELETE FROM users WHERE id = $1 RETURNING id', [userId]);
+  return result.rows.length > 0;  // Devuelve true si el usuario fue eliminado
+};
+
 
 export default User;

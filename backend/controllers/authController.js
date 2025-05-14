@@ -1,4 +1,8 @@
 import { authenticateUser } from '../services/authService.js';
+import jwt from 'jsonwebtoken';
+const { JsonWebTokenError, TokenExpiredError } = jwt;
+
+import Log from '../utils/log.js';
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
