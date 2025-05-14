@@ -2,8 +2,6 @@ import pool from './db.js';
 import bcrypt from 'bcryptjs';
 
 import Log from '../utils/log.js';
-import { fileURLToPath } from 'url';
-const log = new Log(fileURLToPath(import.meta.url));
 
 const TABLES = {
   users: `
@@ -18,7 +16,7 @@ const TABLES = {
     CREATE TABLE IF NOT EXISTS greenhouses (
       id SERIAL PRIMARY KEY,
       owner INTEGER REFERENCES users(id) ON DELETE CASCADE,
-      alias VARCHAR(255) UNIQUE NOT NULL,
+      alias VARCHAR(255) NOT NULL,
       apitoken VARCHAR(255) UNIQUE NOT NULL,
       creation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       last_active_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -55,9 +53,9 @@ async function createDefaultAdmin() {
       `INSERT INTO users (username, password, role) VALUES ($1, $2, $3)`,
       [username, hashed, role]
     );
-    log.info('Default admin user created.');
+    Log.info('Default admin user created.');
   } else {
-    log.info('Admin user already exists.');
+    Log.info('Admin user already exists.');
   }
 }
 
@@ -65,15 +63,15 @@ export async function initDB() {
   await waitForDb();
   try {
     for (const [name, query] of Object.entries(TABLES)) {
-      log.info(`Creating table: ${name}`);
+      Log.info(`Creating table: ${name}`);
       await pool.query(query);  // <--- esto ahora se logea
     }
 
     await createDefaultAdmin();
 
-    log.ok('Initialization complete.');
+    Log.ok('Initialization complete.');
   } catch (err) {
-    log.critical('Initialization failed:', err);
+    Log.critical('Initialization failed:', err);
   }
 }
 
@@ -82,14 +80,14 @@ const waitForDb = async (retries = 10, delay = 2000) => {
     try {
       const client = await pool.connect();
       client.release();
-      log.ok('Connected successfully');
+      Log.ok('Connected successfully');
       return;
     } catch (err) {
-      log.info(`Waiting for database... (${10 - retries + 1}/10)`);
+      Log.info(`Waiting for database... (${10 - retries + 1}/10)`);
       await new Promise(res => setTimeout(res, delay));
       retries--;
     }
   }
-  log.critical('Database is not ready after multiple attempts');
+  Log.critical('Database is not ready after multiple attempts');
   throw new Error('Database is not ready after multiple attempts');
 };

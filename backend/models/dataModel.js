@@ -9,6 +9,15 @@ class Data {
     this.jsonData = jsonData;
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      greenhouseId: this.greenhouseId,
+      timestamp: this.timestamp,
+      jsonData: this.jsonData
+    };
+  }
+
   static async createData(greenhouseId, jsonData) {
     const result = await db.query(
       'INSERT INTO datas (greenhouse_id, json_data, timestamp) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, greenhouse_id, timestamp, json_data',

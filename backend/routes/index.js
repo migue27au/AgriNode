@@ -1,10 +1,9 @@
 import express from 'express';
-import session from './session.js';
+import session from './sessionRoutes.js';
+import greenhouse from './greenhouseRoutes.js';
 import homeRoutes from './homeRoutes.js';
 
 import Log from '../utils/log.js';
-import { fileURLToPath } from 'url';
-const log = new Log(fileURLToPath(import.meta.url));
 
 const router = express.Router();
 
@@ -15,13 +14,14 @@ router.use((req, res, next) => {
   const path = req.originalUrl;
   const ip = req.ip || req.connection.remoteAddress;
 
-  log.info(`Request received - Method: ${method}, Path: ${path}, IP: ${ip}`);
+  Log.info(`Request received - Method: ${method}, Path: ${path}, IP: ${ip}`);
 
   next();
 });
 
 
 router.use('/session', session);
+router.use('/greenhouse', greenhouse);
 router.use('/home', homeRoutes);
 
 export default router;

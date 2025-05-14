@@ -2,9 +2,6 @@ import db from '../config/db.js';
 import bcrypt from 'bcryptjs';  // Importamos bcryptjs para manejar las contraseñas
 
 import Log from '../utils/log.js';
-import { fileURLToPath } from 'url';
-const log = new Log(fileURLToPath(import.meta.url));
-
 
 
 class User {
@@ -16,14 +13,24 @@ class User {
     this.role = role;  // Rol del usuario
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      username: this.username,
+      lastSession: this.lastSession,
+      role: this.role
+    };
+  }
+
   // Método para comparar una contraseña con la almacenada en la base de datos
   async comparePassword(candidatePassword) {
     const isMatch = await bcrypt.compare(candidatePassword, this.password);
     return isMatch;  // Devuelve true o false
   }
+}
 
-  // Método para actualizar la contraseña del usuario
-  static async updatePassword(userId, newPassword) {
+// Método para actualizar la contraseña del usuario
+export const updatePassword = async (userId, newPassword) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
@@ -37,7 +44,7 @@ class User {
   }
 
   // Método para actualizar el rol de un usuario
-  static async updateRole(userId, newRole) {
+export const updateRole = async (userId, newRole) => {
     const result = await db.query(
       'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, username, password, last_session, role',
       [newRole, userId]
@@ -45,7 +52,6 @@ class User {
 
     return result.rows[0];  // Devuelve el usuario con el nuevo rol
   }
-}
 
 export const checkCredentials = async (username, password) => {
   const user = await getUserByUsername(username);
