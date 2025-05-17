@@ -2,7 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import router from './routes/index.js';
+import backend from './routes/backend.js';
+import frontend from './routes/frontend.js';
 
 import { initDB } from './config/init_db.js'
 
@@ -16,7 +17,23 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/api', router);
+
+// Middleware para loguear el path, método y IP de origen
+app.use((req, res, next) => {
+  const method = req.method;
+  const path = req.originalUrl;
+  const ip = req.ip || req.connection.remoteAddress;
+
+  Log.info(`Request received - Method: ${method}, Path: ${path}, IP: ${ip}`);
+
+  next();
+});
+
+
+app.use('/api', backend);
+app.use('/app', frontend);
+
+
 
 app.listen(3000, () => {
   Log.ok('AgriNode backend running on port 3000');

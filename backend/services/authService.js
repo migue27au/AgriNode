@@ -14,7 +14,7 @@ export const authenticateUser = async (username, password) => {
 
   // Si no se encuentra el usuario o las credenciales no son correctas
   if (!user) {
-    Log.warning(`Authenticating "${username}" failed`);
+    Log.warn(`Authenticating "${username}" failed`);
     return { success: false, message: 'Invalid credentials' };
   }
 
