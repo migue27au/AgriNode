@@ -20,7 +20,7 @@ const TABLES = {
 			alias VARCHAR(255) NOT NULL, 
 			apitoken VARCHAR(255) UNIQUE NOT NULL, 
 			creation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-			last_active_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			last_active_timestamp TIMESTAMP NULL
 		)`,
 	datas: `
 		CREATE TABLE IF NOT EXISTS datas (

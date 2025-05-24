@@ -54,6 +54,21 @@ export const getGreenhousesByOwnerId = async (ownerId) => {
 };
 
 
+export const getGreenhouseByOwnerIdAndAlias = async (ownerId, alias) => {
+  Log.ok(`Fetching greenhouse with alias "${alias}" for user ${ownerId}`);
+
+  const greenhouse = await greenhouseModel.getGreenhouseOfOwnerByAlias(ownerId, alias);
+
+  if (!greenhouse) {
+    Log.warn(`No greenhouse found with alias "${alias}" for user ${ownerId}`);
+    return null;
+  }
+
+  Log.ok(`Found greenhouse "${alias}" for user ${ownerId}`);
+
+  return greenhouse.toJSON();
+};
+
 export const updateGreenhouseByOwnerId = async (id, ownerId, alias, apitoken) => {
   const greenhouses = await greenhouseModel.getGreenhousesOfOwner(ownerId);
 

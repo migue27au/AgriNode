@@ -50,6 +50,26 @@ export const getGreenhousesOfOwner = async (ownerId) => {
   ));
 }
 
+export const getGreenhouseOfOwnerByAlias = async (ownerId, alias) => {
+  const result = await db.query(
+    'SELECT * FROM greenhouses WHERE owner = $1 AND alias = $2 LIMIT 1',
+    [ownerId, alias]
+  );
+
+  if (result.rows.length === 0) return null;
+
+  const row = result.rows[0];
+
+  return new Greenhouse(
+    row.id,
+    row.owner,
+    row.alias,
+    row.apitoken,
+    row.creation_timestamp,
+    row.last_active_timestamp
+  );
+};
+
 export const getGreenhouseByApitoken = async (apitoken) => {
   const result = await db.query(
     'SELECT * FROM greenhouses WHERE apitoken = $1',
